@@ -9,10 +9,14 @@
     "license": "MIT",
     "require": {
         "php": "^7.2.5",
+        "babenkoivan/elastic-migrations": "^1.2",
+        "babenkoivan/elastic-scout-driver": "^1.2",
+        "babenkoivan/elastic-scout-driver-plus": "^1.5",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^1.0",
         "guzzlehttp/guzzle": "^6.3",
         "laravel/framework": "^7.0",
+        "laravel/scout": "^8.1",
         "laravel/tinker": "^2.0",
         "predis/predis": "^1.1"
     },

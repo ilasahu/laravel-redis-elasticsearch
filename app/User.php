@@ -3,12 +3,59 @@
 namespace App;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use ElasticScoutDriverPlus\Builders\SearchRequestBuilder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Scout\Searchable;
+use ElasticScoutDriverPlus\CustomSearch;
+use ElasticScoutDriverPlus\Builders\QueryBuilderInterface;
+
+final class SearchFormQueryBuilder implements QueryBuilderInterface
+{
+    /**
+     * @var string
+     */
+    private $name;
+
+    public function name(string $name): self
+    {
+        $this->name = $name;
+        return $this;
+    }
+
+    public function buildQuery(): array
+    {
+        return [
+            "match" => [
+                "name" => [
+                    "query" => $this->name,
+                    "fuzziness" => "auto"
+                ]
+            ]
+        ];
+    }
+}
 
 class User extends Authenticatable
 {
     use Notifiable;
+    use
+        Searchable,
+        CustomSearch;
+
+    public function toSearchableArray()
+    {
+        return [
+            "name" => $this->name,
+            "email" => $this->email,
+        ];
+    }
+
+    public static function searchForm(): SearchRequestBuilder
+    {
+        return new SearchRequestBuilder(new static(), new SearchFormQueryBuilder());
+    }
+
 
     /**
      * The attributes that are mass assignable.
